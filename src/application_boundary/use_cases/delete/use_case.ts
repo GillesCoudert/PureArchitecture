@@ -11,8 +11,8 @@ import { Requester } from '../../../common/requester';
  */
 export interface DeleteUseCase<TRequester extends Requester, TId = string> {
     /**
-     * Permanently delete an entity by its ID.
-     * @param params - Command parameters containing requester and entity ID
+     * Execute the use case: permanently delete an entity by its ID.
+     * @param input - Command parameters containing requester and entity ID
      */
-    delete(params: DeleteInput<TRequester, TId>): ResultAsync<void>;
+    execute(input: DeleteInput<TRequester, TId>): ResultAsync<void>;
 }

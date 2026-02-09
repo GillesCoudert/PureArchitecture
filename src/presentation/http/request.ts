@@ -24,15 +24,4 @@ export interface HttpRequest<TRequester extends Requester> {
      * @returns The value of the query parameter, or undefined if not present.
      */
     getQueryParameter<T>(name: string, defaultValue?: T): T | undefined;
-
-    /**
-     * Retrieves all query parameters from the request.
-     * @param names The names of the query parameters to retrieve.
-     * @param defaultValues An optional record of default values for the query parameters.
-     * @returns A record of query parameter names and their corresponding values.
-     */
-    getQueryParameters<T>(
-        names: string[],
-        defaultValues?: Record<string, T>,
-    ): Record<string, T | undefined>;
 }

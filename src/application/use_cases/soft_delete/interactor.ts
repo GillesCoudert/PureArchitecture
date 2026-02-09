@@ -29,7 +29,7 @@ export class SoftDeleteInteractor<
         >,
     ) {}
 
-    softDelete(params: SoftDeleteInput<TRequester, TId>): ResultAsync<void> {
+    execute(params: SoftDeleteInput<TRequester, TId>): ResultAsync<void> {
         if (!this.repository.softDelete) {
             throw new Error('Soft delete is not supported by this repository');
         }

@@ -1,4 +1,4 @@
-import { Parameters } from '../../../common/parameters';
+import { PureParameters } from '../../../common/parameters';
 import { Requester } from '../../../common/requester';
 
 /**
@@ -11,7 +11,7 @@ import { Requester } from '../../../common/requester';
 export interface DeleteInput<
     TRequester extends Requester,
     TId = string,
-> extends Parameters<TRequester> {
+> extends PureParameters<TRequester> {
     /**
      * The entity ID to delete
      */

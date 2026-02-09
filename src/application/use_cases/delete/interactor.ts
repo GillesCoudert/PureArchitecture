@@ -29,7 +29,7 @@ export class DeleteInteractor<
         >,
     ) {}
 
-    delete(params: DeleteInput<TRequester, TId>): ResultAsync<void> {
+    execute(params: DeleteInput<TRequester, TId>): ResultAsync<void> {
         return this.repository.delete(params);
     }
 }

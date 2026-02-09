@@ -1,90 +1,67 @@
 import { FindAllUseCase } from '../../application_boundary/use_cases/find_all/use_case';
 import { Requester } from '../../common/requester';
 import { HttpRequest } from '../http/request';
-import { failureToApiResponse } from '../mapping/result_to_api_response';
 import { ApiResponse } from '../responses/api_response';
 import { HttpResponse } from '../http/response';
+import { PureController } from './pure_controller';
+import { PageResult } from '../../common/page_result';
+import { Translator } from '../../infrastructure_boundary/i18n/translator';
+import { Error, Result, Success } from '@gilles-coudert/pure-trace';
+import { FindAllInput } from '../../application_boundary/use_cases/find_all/input';
 
 /**
  * Controller for handling find all requests.
  * @template TRequester The requester/actor type for access control
  * @template TDto The data transfer object type
  */
-export abstract class FindAllController<TRequester extends Requester, TDto> {
+export abstract class FindAllController<
+    TRequester extends Requester,
+    TDto,
+> extends PureController<
+    FindAllUseCase<TRequester, TDto>,
+    TDto[],
+    TRequester,
+    PageResult<TDto>
+> {
     constructor(
         protected readonly interactor: FindAllUseCase<TRequester, TDto>,
-    ) {}
+        protected readonly translator: Translator,
+    ) {
+        super(interactor, translator);
+    }
 
-    protected async handle(
+    override getUseCaseInput(
         request: HttpRequest<TRequester>,
-        response: HttpResponse,
-    ): Promise<ApiResponse<TDto[]>> {
-        //>
-        //> > fr: Récupérer le demandeur à partir du contexte de la requête
-        //> > en: Get the requester from the request context
-        //>
+    ): Result<FindAllInput<TRequester>> {
         const requester = request.getRequester();
-
-        //>
-        //> > fr: Extraire les paramètres de requête numériques (pagination)
-        //> > en: Extract numeric query parameters (pagination)
-        //>
-        const numericParameterNames = ['pageNumber', 'pageSize'];
-        const numericParameters = request.getQueryParameters<number>(
-            numericParameterNames,
-        );
-
-        //>
-        //> > fr: Extraire les paramètres de requête textuels (filtre, tri, presets)
-        //> > en: Extract string query parameters (filter, sort, presets)
-        //>
-        const stringParameterNames = ['filter', 'sort', 'presets'];
-        const stringParameters =
-            request.getQueryParameters<string>(stringParameterNames);
-
-        const result = await this.interactor.findAll({
+        return new Success({
             requester,
-            pageNumber: numericParameters.pageNumber,
-            pageSize: numericParameters.pageSize,
-            filter: stringParameters.filter,
-            sort: stringParameters.sort,
-            presets: stringParameters.presets,
+            pageNumber: request.getQueryParameter<number>('pageNumber'),
+            pageSize: request.getQueryParameter<number>('pageSize'),
+            filter: request.getQueryParameter<string>('filter'),
+            sort: request.getQueryParameter<string>('sort'),
+            presets: request.getQueryParameter<string>('presets'),
         });
+    }
 
-        //>
-        //> > fr: Déterminer le code HTTP et la réponse API
-        //> > en: Determine the HTTP status code and API response
-        //>
-        let statusCode: number;
-        let apiResponse: ApiResponse<TDto[]>;
-        let containsTechnicalIssue = false;
-        if (result.isFailure()) {
-            for (const error of result.getErrors()) {
-                containsTechnicalIssue =
-                    containsTechnicalIssue || error.type === 'technicalIssue';
-            }
-            statusCode = containsTechnicalIssue ? 500 : 400;
-            apiResponse = failureToApiResponse(result);
-        } else {
-            const pageResult = result.value;
-            statusCode = 200;
-            apiResponse = {
-                success: true,
-                data: pageResult.items,
-                metadata: {
-                    pagination: {
-                        pageNumber: pageResult.pageNumber,
-                        pageSize: pageResult.pageSize,
-                        count: pageResult.totalCount,
-                    },
+    override checkError(_: Error): number | undefined {
+        return undefined;
+    }
+
+    override setResponse(
+        response: HttpResponse,
+        useCaseResult: PageResult<TDto>,
+    ): ApiResponse<TDto[]> {
+        return {
+            success: true,
+            data: useCaseResult.items,
+            metadata: {
+                pagination: {
+                    pageNumber: useCaseResult.pageNumber,
+                    pageSize: useCaseResult.pageSize,
+                    count: useCaseResult.totalCount,
                 },
-            };
-        }
-        //>
-        //> > fr: Envoyer la réponse HTTP
-        //> > en: Send the HTTP response
-        //>
-        response.setStatus(statusCode);
-        return apiResponse;
+            },
+        };
     }
 }

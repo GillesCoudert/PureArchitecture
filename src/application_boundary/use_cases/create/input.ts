@@ -1,4 +1,4 @@
-import { Parameters } from '../../../common/parameters';
+import { PureParameters } from '../../../common/parameters';
 import { Requester } from '../../../common/requester';
 
 /**
@@ -9,7 +9,7 @@ import { Requester } from '../../../common/requester';
  */
 export interface CreateInput<
     TRequester extends Requester,
-> extends Parameters<TRequester> {
+> extends PureParameters<TRequester> {
     /**
      * Entity data without system-managed fields (id, createdAt, etc.)
      */

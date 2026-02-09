@@ -29,7 +29,7 @@ export class RestoreInteractor<
         >,
     ) {}
 
-    restore(params: RestoreInput<TRequester, TId>): ResultAsync<void> {
+    execute(params: RestoreInput<TRequester, TId>): ResultAsync<void> {
         if (!this.repository.restore) {
             throw new Error('Restore is not supported by this repository');
         }

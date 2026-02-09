@@ -37,7 +37,7 @@ export class UpdateInteractor<
         private readonly mapper: Mapper<TEntity, TDto>,
     ) {}
 
-    update(params: UpdateInput<TRequester, TId>): ResultAsync<TDto> {
+    execute(params: UpdateInput<TRequester, TId>): ResultAsync<TDto> {
         const command: UpdateCommand<TRequester, TEntity, TId> = {
             requester: params.requester,
             id: params.id,

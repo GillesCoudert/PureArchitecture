@@ -4,7 +4,7 @@ import { Requester } from './requester';
  * Base interface for all parameters requiring a requester.
  * This ensures every operation has an authenticated/authorized actor.
  */
-export interface Parameters<TRequester extends Requester> {
+export interface PureParameters<TRequester extends Requester> {
     requester: TRequester;
 }
 
@@ -14,6 +14,6 @@ export interface Parameters<TRequester extends Requester> {
 export interface TargetEntityParameters<
     TRequester extends Requester,
     TId = string,
-> extends Parameters<TRequester> {
+> extends PureParameters<TRequester> {
     id: TId;
 }

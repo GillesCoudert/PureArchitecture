@@ -11,13 +11,9 @@ import { Requester } from '../../../common/requester';
  */
 export interface CreateUseCase<TRequester extends Requester, TDto> {
     /**
-     * Create a new entity and return it as a DTO.
-     * @param params - Command parameters containing requester and entity data
+     * Execute the use case: create a new entity and return it as a DTO.
+     * @param input - Command parameters containing requester and entity data
      * @returns The created entity as a DTO
      */
-    create(
-        params: CreateInput<TRequester> & {
-            data: Partial<Record<string, unknown>>;
-        },
-    ): ResultAsync<TDto>;
+    execute(input: CreateInput<TRequester>): ResultAsync<TDto>;
 }

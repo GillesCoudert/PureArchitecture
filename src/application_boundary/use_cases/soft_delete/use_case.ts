@@ -11,8 +11,8 @@ import { Requester } from '../../../common/requester';
  */
 export interface SoftDeleteUseCase<TRequester extends Requester, TId = string> {
     /**
-     * Soft delete an entity by its ID (mark as deleted without removing).
-     * @param params - Command parameters containing requester and entity ID
+     * Execute the use case: soft delete an entity by its ID (mark as deleted without removing).
+     * @param input - Command parameters containing requester and entity ID
      */
-    softDelete(params: SoftDeleteInput<TRequester, TId>): ResultAsync<void>;
+    execute(input: SoftDeleteInput<TRequester, TId>): ResultAsync<void>;
 }

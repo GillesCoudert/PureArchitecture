@@ -37,7 +37,7 @@ export class CreateInteractor<
         private readonly mapper: Mapper<TEntity, TDto>,
     ) {}
 
-    create(params: CreateInput<TRequester>): ResultAsync<TDto> {
+    execute(params: CreateInput<TRequester>): ResultAsync<TDto> {
         const command: CreateCommand<TRequester, TEntity> = {
             requester: params.requester,
             data: params.data as EntityData<TEntity>,

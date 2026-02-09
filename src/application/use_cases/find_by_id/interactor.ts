@@ -33,7 +33,7 @@ export class FindByIdInteractor<
         private readonly mapper: Mapper<TEntity, TDto>,
     ) {}
 
-    findById(params: FindByIdInput<TRequester, TId>): ResultAsync<TDto> {
+    execute(params: FindByIdInput<TRequester, TId>): ResultAsync<TDto> {
         return this.repository
             .findById(params)
             .mapSuccess((entity) => new Success(this.mapper.to(entity)));

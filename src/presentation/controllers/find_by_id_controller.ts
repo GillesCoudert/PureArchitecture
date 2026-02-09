@@ -1,74 +1,67 @@
-import { generateFailure } from '@gilles-coudert/pure-trace';
+import {
+    Error,
+    generateFailure,
+    Result,
+    Success,
+} from '@gilles-coudert/pure-trace';
 import { FindByIdUseCase } from '../../application_boundary/use_cases/find_by_id/use_case';
 import { Requester } from '../../common/requester';
 import { HttpRequest } from '../http/request';
-import { failureToApiResponse } from '../mapping/result_to_api_response';
 import { ApiResponse } from '../responses/api_response';
 import { HttpResponse } from '../http/response';
+import { PureController } from './pure_controller';
+import { Translator } from '../../infrastructure_boundary/i18n/translator';
+import { FindByIdInput } from '../../application_boundary/use_cases/find_by_id/input';
 
 export abstract class FindByIdController<
     TRequester extends Requester,
     TDto,
     TId = string,
+> extends PureController<
+    FindByIdUseCase<TRequester, TDto, TId>,
+    TDto,
+    TRequester,
+    TDto
 > {
     constructor(
         protected readonly interactor: FindByIdUseCase<TRequester, TDto, TId>,
-    ) {}
+        protected readonly translator: Translator,
+    ) {
+        super(interactor, translator);
+    }
 
-    protected async handle(
+    override getUseCaseInput(
         request: HttpRequest<TRequester>,
-        response: HttpResponse,
-    ): Promise<ApiResponse<TDto>> {
-        //>
-        //> > fr: Récupérer le demandeur à partir du contexte de la requête
-        //> > en: Get the requester from the request context
-        //>
+    ): Result<FindByIdInput<TRequester, TId>> {
         const requester = request.getRequester();
-        //>
-        //> > fr: Récupérer la ressource par son ID
-        //> > en: Retrieve the resource by its ID
-        //>
         const id = request.getQueryParameter<TId>('id');
-        let result;
         if (id === undefined) {
-            result = generateFailure('processError', 'idNotProvided', {});
-        } else {
-            result = await this.interactor.findById({
-                requester,
-                id,
+            return generateFailure({
+                type: 'processError',
+                code: 'idNotProvided',
+                data: {},
             });
         }
-        //>
-        //> > fr: Déterminer le code HTTP et la réponse API
-        //> > en: Determine the HTTP status code and API response
-        //>
-        let statusCode: number;
-        let apiResponse: ApiResponse<TDto>;
-        let containsTechnicalIssue = false;
-        if (result.isFailure()) {
-            for (const error of result.getErrors()) {
-                switch (error.code) {
-                    case 'notFound':
-                        statusCode = 404;
-                        break;
-                }
-                containsTechnicalIssue =
-                    containsTechnicalIssue || error.type === 'technicalIssue';
-            }
-            statusCode = containsTechnicalIssue ? 500 : 400;
-            apiResponse = failureToApiResponse(result);
-        } else {
-            statusCode = 200;
-            apiResponse = {
-                success: true,
-                data: result.value,
-            };
+        return new Success({
+            requester,
+            id,
+        });
+    }
+
+    override checkError(error: Error): number | undefined {
+        switch (error.code) {
+            case 'notFound':
+                return 404;
         }
-        //>
-        //> > fr: Envoyer la réponse HTTP
-        //> > en: Send the HTTP response
-        //>
-        response.setStatus(statusCode);
-        return apiResponse;
+    }
+
+    override setResponse(
+        response: HttpResponse,
+        useCaseResult: TDto,
+    ): ApiResponse<TDto> {
+        return {
+            success: true,
+            data: useCaseResult,
+        };
     }
 }

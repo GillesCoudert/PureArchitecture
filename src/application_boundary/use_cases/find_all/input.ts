@@ -1,4 +1,4 @@
-import { Parameters } from '../../../common/parameters';
+import { PureParameters } from '../../../common/parameters';
 import { Requester } from '../../../common/requester';
 
 /**
@@ -8,11 +8,11 @@ import { Requester } from '../../../common/requester';
  * for retrieving a collection of entities.
  *
  * @template TRequester The type representing the requester/actor for access control.
- * @extends Parameters<TRequester>
+ * @extends PureParameters<TRequester>
  */
 export interface FindAllInput<
     TRequester extends Requester,
-> extends Parameters<TRequester> {
+> extends PureParameters<TRequester> {
     /**
      * The page number for pagination (optional).
      * If not provided, defaults to the first page.

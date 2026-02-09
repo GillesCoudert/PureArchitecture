@@ -37,7 +37,7 @@ export class FindAllInteractor<
         private readonly mapper: Mapper<TEntity, TDto>,
     ) {}
 
-    findAll(input: FindAllInput<TRequester>): ResultAsync<PageResult<TDto>> {
+    execute(input: FindAllInput<TRequester>): ResultAsync<PageResult<TDto>> {
         const query: FindAllQuery<TRequester> = {
             requester: input.requester,
             pageNumber: input.pageNumber,

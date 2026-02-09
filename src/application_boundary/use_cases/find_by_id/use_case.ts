@@ -1,6 +1,7 @@
 import { ResultAsync } from '@gilles-coudert/pure-trace';
 import { FindByIdInput } from './input';
 import { Requester } from '../../../common/requester';
+import { PureUseCase } from '../pure_use_case';
 
 /**
  * Use case interface for finding an entity by its ID.
@@ -14,11 +15,11 @@ export interface FindByIdUseCase<
     TRequester extends Requester,
     TDto,
     TId = string,
-> {
+> extends PureUseCase<TRequester, TDto> {
     /**
-     * Find an entity by its ID and return it as a DTO.
+     * Execute the use case: find an entity by its ID and return it as a DTO.
      * @param input - Query parameters containing requester and entity ID
      * @returns The entity as a DTO, or null if not found
      */
-    findById(input: FindByIdInput<TRequester, TId>): ResultAsync<TDto>;
+    execute(input: FindByIdInput<TRequester, TId>): ResultAsync<TDto>;
 }

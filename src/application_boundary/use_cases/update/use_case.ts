@@ -16,9 +16,9 @@ export interface UpdateUseCase<
     TId = string,
 > {
     /**
-     * Update an existing entity and return it as a DTO.
-     * @param params - Command parameters containing requester, entity ID, and updated data
+     * Execute the use case: update an existing entity and return it as a DTO.
+     * @param input - Command parameters containing requester, entity ID, and updated data
      * @returns The updated entity as a DTO
      */
-    update(params: UpdateInput<TRequester, TId>): ResultAsync<TDto>;
+    execute(input: UpdateInput<TRequester, TId>): ResultAsync<TDto>;
 }

@@ -11,8 +11,8 @@ import { Requester } from '../../../common/requester';
  */
 export interface RestoreUseCase<TRequester extends Requester, TId = string> {
     /**
-     * Restore a soft deleted entity.
-     * @param params - Command parameters containing requester and entity ID
+     * Execute the use case: restore a soft deleted entity.
+     * @param input - Command parameters containing requester and entity ID
      */
-    restore(params: RestoreInput<TRequester, TId>): ResultAsync<void>;
+    execute(input: RestoreInput<TRequester, TId>): ResultAsync<void>;
 }
