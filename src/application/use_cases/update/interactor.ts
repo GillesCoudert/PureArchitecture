@@ -23,10 +23,11 @@ import { UpdateUseCase } from '../../../application_boundary/use_cases/update/us
 export class UpdateInteractor<
     TRequester extends Requester,
     TEntity extends ImmutableEntity<TId, TAccessPolicy>,
+    TInputData,
     TDto,
     TAccessPolicy,
     TId = string,
-> implements UpdateUseCase<TRequester, TDto, TId> {
+> implements UpdateUseCase<TRequester, TInputData, TDto, TId> {
     constructor(
         private readonly repository: Repository<
             TRequester,
@@ -37,7 +38,9 @@ export class UpdateInteractor<
         private readonly mapper: Mapper<TEntity, TDto>,
     ) {}
 
-    execute(params: UpdateInput<TRequester, TId>): ResultAsync<TDto> {
+    execute(
+        params: UpdateInput<TRequester, TInputData, TId>,
+    ): ResultAsync<TDto> {
         const command: UpdateCommand<TRequester, TEntity, TId> = {
             requester: params.requester,
             id: params.id,

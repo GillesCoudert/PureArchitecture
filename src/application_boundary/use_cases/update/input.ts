@@ -10,6 +10,7 @@ import { Requester } from '../../../common/requester';
  */
 export interface UpdateInput<
     TRequester extends Requester,
+    TInputData,
     TId = string,
 > extends PureParameters<TRequester> {
     /**
@@ -19,5 +20,5 @@ export interface UpdateInput<
     /**
      * Entity data to update (only fields to change)
      */
-    data: Record<string, unknown>;
+    data: TInputData;
 }

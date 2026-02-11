@@ -22,11 +22,12 @@ import { CreateUseCase } from '../../../application_boundary/use_cases/create/us
  */
 export class CreateInteractor<
     TRequester extends Requester,
+    TInputData,
     TEntity extends ImmutableEntity<TId, TAccessPolicy>,
     TDto,
     TAccessPolicy,
     TId = string,
-> implements CreateUseCase<TRequester, TDto> {
+> implements CreateUseCase<TRequester, TInputData, TDto> {
     constructor(
         private readonly repository: Repository<
             TRequester,
@@ -37,7 +38,7 @@ export class CreateInteractor<
         private readonly mapper: Mapper<TEntity, TDto>,
     ) {}
 
-    execute(params: CreateInput<TRequester>): ResultAsync<TDto> {
+    execute(params: CreateInput<TRequester, TInputData>): ResultAsync<TDto> {
         const command: CreateCommand<TRequester, TEntity> = {
             requester: params.requester,
             data: params.data as EntityData<TEntity>,

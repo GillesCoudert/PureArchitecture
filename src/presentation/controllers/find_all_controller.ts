@@ -18,8 +18,8 @@ export abstract class FindAllController<
     TRequester extends Requester,
     TDto,
 > extends PureController<
-    FindAllUseCase<TRequester, TDto>,
     TDto[],
+    FindAllUseCase<TRequester, TDto>,
     TRequester,
     PageResult<TDto>
 > {

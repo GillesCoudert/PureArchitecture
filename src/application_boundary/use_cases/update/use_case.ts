@@ -12,6 +12,7 @@ import { Requester } from '../../../common/requester';
  */
 export interface UpdateUseCase<
     TRequester extends Requester,
+    TInputData,
     TDto,
     TId = string,
 > {
@@ -20,5 +21,5 @@ export interface UpdateUseCase<
      * @param input - Command parameters containing requester, entity ID, and updated data
      * @returns The updated entity as a DTO
      */
-    execute(input: UpdateInput<TRequester, TId>): ResultAsync<TDto>;
+    execute(input: UpdateInput<TRequester, TInputData, TId>): ResultAsync<TDto>;
 }

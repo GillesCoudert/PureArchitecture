@@ -9,12 +9,14 @@ import { Translator } from '../../infrastructure_boundary/i18n/translator';
 
 /**
  * Abstract controller for handling pure use cases that follow Clean Architecture principles.
+ * @template TApiResultData The data type returned by the API response
+ * @template TInteractor The interactor/use case type
  * @template TRequester The requester/actor type for access control
  * @template TUseCaseResult The result type returned by the use case
  */
 export abstract class PureController<
+    TApiResultData,
     TInteractor extends PureUseCase<TRequester, TUseCaseResult>,
-    TApiResult,
     TRequester extends Requester,
     TUseCaseResult,
 > {
@@ -26,7 +28,7 @@ export abstract class PureController<
     protected async handle(
         request: HttpRequest<TRequester>,
         response: HttpResponse,
-    ): Promise<ApiResponse<TApiResult>> {
+    ): Promise<ApiResponse<TApiResultData>> {
         const preferredCulture = request.getRequester().preferredCulture;
         //>
         //> > fr: Exécuter le cas d'utilisation avec les paramètres d'entrée
@@ -51,7 +53,7 @@ export abstract class PureController<
         //> > en: Determine the HTTP status code and API response
         //>
         let statusCode: number | undefined = undefined;
-        let apiResponse: ApiResponse<TApiResult>;
+        let apiResponse: ApiResponse<TApiResultData>;
         let containsTechnicalIssue = false;
         if (result.isFailure()) {
             for (const error of result.getErrors()) {
@@ -96,5 +98,5 @@ export abstract class PureController<
     abstract setResponse(
         response: HttpResponse,
         useCaseResult: TUseCaseResult,
-    ): ApiResponse<TApiResult>;
+    ): ApiResponse<TApiResultData>;
 }

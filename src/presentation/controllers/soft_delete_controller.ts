@@ -1,30 +1,34 @@
-import {
-    Error,
-    generateFailure,
-    Result,
-    Success,
-} from '@gilles-coudert/pure-trace';
-import { FindByIdUseCase } from '../../application_boundary/use_cases/find_by_id/use_case';
+import { SoftDeleteUseCase } from '../../application_boundary/use_cases/soft_delete/use_case';
 import { Requester } from '../../common/requester';
 import { HttpRequest } from '../http/request';
 import { ApiResponse } from '../responses/api_response';
 import { HttpResponse } from '../http/response';
 import { PureController } from './pure_controller';
 import { Translator } from '../../infrastructure_boundary/i18n/translator';
-import { FindByIdInput } from '../../application_boundary/use_cases/find_by_id/input';
+import {
+    Error,
+    generateFailure,
+    Result,
+    Success,
+} from '@gilles-coudert/pure-trace';
+import { SoftDeleteInput } from '../../application_boundary/use_cases/soft_delete/input';
 
-export abstract class FindByIdController<
+/**
+ * Controller for handling soft delete requests.
+ * @template TRequester The requester/actor type for access control
+ * @template TId The entity ID type (defaults to string)
+ */
+export abstract class SoftDeleteController<
     TRequester extends Requester,
-    TDto,
     TId = string,
 > extends PureController<
-    TDto,
-    FindByIdUseCase<TRequester, TDto, TId>,
+    void,
+    SoftDeleteUseCase<TRequester, TId>,
     TRequester,
-    TDto
+    void
 > {
     constructor(
-        protected readonly interactor: FindByIdUseCase<TRequester, TDto, TId>,
+        protected readonly interactor: SoftDeleteUseCase<TRequester, TId>,
         protected readonly translator: Translator,
     ) {
         super(interactor, translator);
@@ -32,7 +36,7 @@ export abstract class FindByIdController<
 
     override getUseCaseInput(
         request: HttpRequest<TRequester>,
-    ): Result<FindByIdInput<TRequester, TId>> {
+    ): Result<SoftDeleteInput<TRequester, TId>> {
         const requester = request.getRequester();
         const id = request.getQueryParameter<TId>('id');
         if (id === undefined) {
@@ -54,13 +58,10 @@ export abstract class FindByIdController<
         }
     }
 
-    override setResponse(
-        response: HttpResponse,
-        useCaseResult: TDto,
-    ): ApiResponse<TDto> {
+    override setResponse(_: HttpResponse, __: void): ApiResponse<void> {
         return {
             success: true,
-            data: useCaseResult,
+            data: undefined,
         };
     }
 }

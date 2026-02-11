@@ -9,9 +9,10 @@ import { Requester } from '../../../common/requester';
  */
 export interface CreateInput<
     TRequester extends Requester,
+    TData,
 > extends PureParameters<TRequester> {
     /**
      * Entity data without system-managed fields (id, createdAt, etc.)
      */
-    data: Record<string, unknown>;
+    data: TData;
 }

@@ -67,7 +67,7 @@
     "dependencies": {
         "@automapper/classes": "^8.8.1",
         "@automapper/nestjs": "^8.8.1",
-        "@gilles-coudert/pure-trace": "^1.0.8",
+        "@gilles-coudert/pure-trace": "^1.0.9",
         "zod": "^4.3.6"
     }
 }

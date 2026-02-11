@@ -24,4 +24,11 @@ export interface HttpRequest<TRequester extends Requester> {
      * @returns The value of the query parameter, or undefined if not present.
      */
     getQueryParameter<T>(name: string, defaultValue?: T): T | undefined;
+
+    /**
+     * Returns the body of the HTTP request, typed as T.
+     * @template T The expected type of the request body.
+     * @returns {T} The request body.
+     */
+    getBody<T>(): T;
 }
