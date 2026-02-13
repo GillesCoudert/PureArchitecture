@@ -3,7 +3,7 @@
 
     "compilerOptions": {
         "declaration": true,
-        "rootDir": ".",
+        "rootDir": "./src",
         "outDir": "./lib",
         "removeComments": true,
         "esModuleInterop": true,

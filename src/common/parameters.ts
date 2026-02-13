@@ -11,7 +11,7 @@ export interface PureParameters<TRequester extends Requester> {
 /**
  * Parameters targeting a specific entity by its ID
  */
-export interface TargetEntityParameters<
+export interface TargetResourceParameters<
     TRequester extends Requester,
     TId = string,
 > extends PureParameters<TRequester> {

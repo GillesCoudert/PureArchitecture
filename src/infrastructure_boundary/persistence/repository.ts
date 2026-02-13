@@ -1,6 +1,5 @@
-import { ImmutableEntity } from '../../domain/immutable_entity';
 import { ResultAsync } from '@gilles-coudert/pure-trace';
-import { TargetEntityParameters } from '../../common/parameters';
+import { TargetResourceParameters } from '../../common/parameters';
 import { Requester } from '../../common/requester';
 import { PageResult } from '../../common/page_result';
 
@@ -67,14 +66,12 @@ export interface UpdateCommand<
  * All operations require a requester for access control.
  *
  * @template TRequester - The requester/actor type for access control
- * @template TEntity - The entity type (must extend ImmutableEntity)
- * @template TAccessPolicy - The access policy type
+ * @template TEntity - The entity type to persist
  * @template TId - The entity ID type (defaults to string)
  */
 export interface Repository<
     TRequester extends Requester,
-    TEntity extends ImmutableEntity<TId, TAccessPolicy>,
-    TAccessPolicy,
+    TEntity,
     TId = string,
 > {
     /**
@@ -82,7 +79,7 @@ export interface Repository<
      * @param query - Query containing requester and entity ID
      */
     findById(
-        query: TargetEntityParameters<TRequester, TId>,
+        query: TargetResourceParameters<TRequester, TId>,
     ): ResultAsync<TEntity>;
 
     /**
@@ -109,14 +106,16 @@ export interface Repository<
      * Delete an entity permanently
      * @param command - Command containing requester and entity ID
      */
-    delete(command: TargetEntityParameters<TRequester, TId>): ResultAsync<void>;
+    delete(
+        command: TargetResourceParameters<TRequester, TId>,
+    ): ResultAsync<void>;
 
     /**
      * Soft delete an entity (if supported)
      * @param command - Command containing requester and entity ID
      */
     softDelete?(
-        command: TargetEntityParameters<TRequester, TId>,
+        command: TargetResourceParameters<TRequester, TId>,
     ): ResultAsync<void>;
 
     /**
@@ -124,6 +123,6 @@ export interface Repository<
      * @param command - Command containing requester and entity ID
      */
     restore?(
-        command: TargetEntityParameters<TRequester, TId>,
+        command: TargetResourceParameters<TRequester, TId>,
     ): ResultAsync<void>;
 }

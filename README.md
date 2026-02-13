@@ -2,28 +2,22 @@
 
 A simplified Clean Architecture implementation using PureTrace for TypeScript applications.
 
+## Core Domain Building Blocks
+
 ```mermaid
 classDiagram
     direction TB
-        namespace Domain {
-            class SoftRemovableEntity {
-                +removedAt: Date
-            }
-
-            class UpdatableEntity {
-                +updatedAt: Date
-            }
-
-            class ImmutableEntity {
+        namespace Core {
+            class~Entity~TId {
                 +id: TId
-                +createdAt: Date
-                +accessPolicy: TAccessPolicy
             }
 
+            class~ValueObject~T {
+                #value: T
+                #validate(): void
+                +getValue(): T
+            }
         }
-
-        UpdatableEntity --|> ImmutableEntity
-        SoftRemovableEntity --|> UpdatableEntity
 ```
 
 ## ESLint Configuration for Clean Architecture
@@ -138,7 +132,9 @@ export default [
 ### Layers Structure
 
 - **`common/`**: Technical factorizations shared across layers (Parameters, shared types, Culture)
-- **`domain/`**: Pure business logic - Entities and domain rules with no external dependencies
+- **`domain/`**: Pure business logic core - Base abstractions
+    - `entity.ts`: Base Entity interface with unique identifier
+    - `value_object.ts`: Abstract ValueObject base class for immutable domain values
 - **`application_boundary/`**: Contracts and interfaces exposing use cases to outer layers (FindByIdUseCase, CreateUseCase, etc.)
 - **`application/`**: Business use cases/interactors implementing the application_boundary contracts
 - **`infrastructure_boundary/`**: Contracts for infrastructure services (Repository, Mapper, etc.)
