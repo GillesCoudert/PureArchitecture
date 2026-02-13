@@ -126,7 +126,7 @@ export default [
     - `entity.ts`: Base Entity interface with unique identifier
     - `value_object.ts`: Abstract ValueObject base class for immutable domain values
 - **`application_boundary/`**: Use case contracts and interfaces
-    - `use_cases/`: Use case contract definitions
+    - Use case contract definitions
 - **`application/`** _(optional in library)_: Use case implementations
     - Use case implementations for concrete business operations
 - **`infrastructure_boundary/`**: Infrastructure service contracts
