@@ -11,6 +11,7 @@ export { ValueObject } from './domain/value_object';
 
 // Common layer - Shared types and interfaces
 export type { Requester } from './common/requester';
+export type { Culture } from './common/culture';
 export type {
     PureParameters,
     TargetResourceParameters as TargetEntityParameters,
@@ -21,6 +22,7 @@ export type { PureUseCase } from './application_boundary/use_cases/pure_use_case
 
 // Infrastructure boundary layer - Service contracts
 export type { Mapper } from './infrastructure_boundary/mapping/mapper';
+export type { Translator } from './infrastructure_boundary/i18n/translator';
 export type {
     Repository,
     CreateCommand,

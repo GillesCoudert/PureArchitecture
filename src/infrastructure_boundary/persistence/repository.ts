@@ -1,7 +1,7 @@
 import { ResultAsync } from '@gilles-coudert/pure-trace';
 import { TargetResourceParameters } from '../../common/parameters';
-import { Requester } from '../../common/requester';
 import { PageResult } from '../../common/page_result';
+import { Requester } from '../../common/requester';
 
 /**
  * Entity data without system-managed fields

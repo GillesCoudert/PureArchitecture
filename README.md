@@ -63,49 +63,38 @@ export default [
 
 #### Domain Layer (`src/domain/**`)
 
-- ❌ Cannot import from `application`
-- ❌ Cannot import from `application_boundary`
-- ❌ Cannot import from `infrastructure`
-- ❌ Cannot import from `presentation`
-- ❌ Cannot import from `infrastructure_boundary`
-- ✅ Pure business logic only
+- ✅ Pure business logic only - NO dependencies
+- ❌ Cannot import from anything outside domain
 
 #### Application Boundary Layer (`src/application_boundary/**`)
 
+- ✅ Use case contracts/interfaces
 - ✅ Can import from `domain`
-- ✅ Can import from `common` (technical factorizations)
-- ❌ Cannot import from `application` (implementations)
-- ❌ Cannot import from `infrastructure`
-- ❌ Cannot import from `infrastructure_boundary`
-- ❌ Cannot import from `presentation`
-- ✅ **Contracts only** (interfaces, types for use cases)
+- ❌ Cannot import from `application`, `infrastructure_boundary`, `infrastructure`, `presentation`
 
 #### Application Layer (`src/application/**`)
 
+- ✅ Use case implementations
+- ✅ Can import from `domain`, `application_boundary`
+- ❌ Cannot import from `infrastructure`, `infrastructure_boundary`, `presentation`
+
+#### Infrastructure Boundary Layer (`src/infrastructure_boundary/**`)
+
+- ✅ Infrastructure service contracts/interfaces
 - ✅ Can import from `domain`
-- ✅ Can import from `application_boundary` (contracts)
-- ✅ Can import from `common` (technical factorizations)
-- ✅ Can import from `infrastructure_boundary` (contracts)
-- ❌ Cannot import from `infrastructure` (implementations)
-- ❌ Cannot import from `presentation`
+- ❌ Cannot import from `application_boundary`, `application`, `infrastructure`, `presentation`
 
 #### Infrastructure Layer (`src/infrastructure/**`)
 
-- ✅ Can import from `domain`
-- ✅ Can import from `application`
-- ✅ Can import from `application_boundary` (contracts)
-- ✅ Can import from `common`
-- ✅ Can import from `infrastructure_boundary`
-- ❌ Cannot import from `presentation`
+- ✅ Infrastructure service implementations (database, APIs, etc.)
+- ✅ Can import from `domain`, `application_boundary`, `infrastructure_boundary`
+- ❌ Cannot import from `application`, `presentation`
 
 #### Presentation Layer (`src/presentation/**`)
 
-- ✅ Can import from `application_boundary` (use case contracts)
-- ✅ Can import from `common`
-- ✅ Can import from `infrastructure_boundary`
-- ❌ Cannot import from `domain`
-- ❌ Cannot import from `application` (use implementations via application_boundary)
-- ❌ Cannot import from `infrastructure` (implementations)
+- ✅ UI controllers, API endpoints, views
+- ✅ Can import from `domain`, `application_boundary`, `infrastructure_boundary`
+- ❌ Cannot import from `application` (use contracts), `infrastructure` (use contracts)
 
 ### Customization
 
@@ -131,12 +120,22 @@ export default [
 
 ### Layers Structure
 
-- **`common/`**: Technical factorizations shared across layers (Parameters, shared types, Culture)
+**Structural Layers** (Clean Architecture):
+
 - **`domain/`**: Pure business logic core - Base abstractions
     - `entity.ts`: Base Entity interface with unique identifier
     - `value_object.ts`: Abstract ValueObject base class for immutable domain values
-- **`application_boundary/`**: Contracts and interfaces exposing use cases to outer layers (FindByIdUseCase, CreateUseCase, etc.)
-- **`application/`**: Business use cases/interactors implementing the application_boundary contracts
-- **`infrastructure_boundary/`**: Contracts for infrastructure services (Repository, Mapper, etc.)
-- **`infrastructure/`**: Actual implementations of infrastructure services (database, external APIs)
-- **`presentation/`**: Controllers, views, API endpoints - can only depend on application_boundary and common
+- **`application_boundary/`**: Use case contracts and interfaces
+    - `use_cases/`: Use case contract definitions
+- **`application/`** _(optional in library)_: Use case implementations
+    - Use case implementations for concrete business operations
+- **`infrastructure_boundary/`**: Infrastructure service contracts
+    - `i18n/`: Translation service contracts
+    - `mapping/`: Object mapping service contracts
+    - `persistence/`: Repository service contracts
+- **`infrastructure/`** _(optional in library)_: Infrastructure implementations
+    - Database adapters, external API clients, file system handlers
+- **`presentation/`** _(optional in library)_: Controllers and endpoints
+    - REST API controllers, GraphQL resolvers, UI handlers
+
+In PureArchitecture, the `common/` folder contains reusable types like `Requester`, `Culture`, `Parameters`, and `PageResult`. - `requester.ts`: User/requester information - `culture.ts`: Localization configuration - `parameters.ts`: Base parameters for use cases - `page_result.ts`: Pagination result wrapper
