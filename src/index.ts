@@ -7,7 +7,7 @@
 
 // Domain layer - Core abstractions
 export type { Entity } from './domain/entity';
-export { ValueObject } from './domain/value_object';
+export type { ValueObject } from './domain/value_object';
 
 // Common layer - Shared types and interfaces
 export type { Requester } from './common/requester';
@@ -18,7 +18,11 @@ export type {
 } from './common/parameters';
 export type { PageResult } from './common/page_result';
 // Application boundary layer - Use case contracts
-export type { PureUseCase } from './application_boundary/use_cases/pure_use_case';
+export type { PureUseCase } from './application_boundary/pure_use_case';
+
+// Presentation layer - Request/Response contracts
+export type { PureRequest } from './presentation/pure_request';
+export { PureController } from './presentation/pure_controller';
 
 // Infrastructure boundary layer - Service contracts
 export type { Mapper } from './infrastructure_boundary/mapping/mapper';
