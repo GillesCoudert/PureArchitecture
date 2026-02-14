@@ -98,7 +98,7 @@ export interface Repository<
      * Update an entity
      * @param command - Command containing requester, entity ID and data to update
      */
-    update(
+    update?(
         command: UpdateCommand<TRequester, TEntity, TId>,
     ): ResultAsync<TEntity>;
 
