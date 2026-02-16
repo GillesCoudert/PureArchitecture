@@ -28,16 +28,15 @@ type ControllerContext = z.infer<typeof controllerContextSchema>;
  * - Context management throughout the request lifecycle
  *
  * @template TControllerResult - The data type returned by the controller (HTTP response, GraphQL result, etc.)
- * @template TRequester - The requester/actor type for access control and audit
  * @template TUseCaseInput - The input parameters type for the use case
  * @template TUseCaseResult - The result type returned by the use case
+ * @template TRequester - The requester/actor type for access control and audit (inferred from TUseCaseInput)
  * @template TTranslator - The translator service for i18n
  *
  * @example
  * ```typescript
  * class CreateUserController extends PureController<
  *   HttpResponse,
- *   User,
  *   CreateUserInput,
  *   User,
  *   I18nTranslator
@@ -50,16 +49,18 @@ type ControllerContext = z.infer<typeof controllerContextSchema>;
  */
 export abstract class PureController<
     TControllerResult,
-    TRequester extends Requester,
     TUseCaseInput extends PureParameters<TRequester>,
     TUseCaseResult,
     TTranslator extends Translator,
+    TRequester extends Requester = TUseCaseInput extends PureParameters<infer R>
+        ? R
+        : never,
 > {
     constructor(
         protected readonly interactor: PureUseCase<
-            TRequester,
             TUseCaseInput,
-            TUseCaseResult
+            TUseCaseResult,
+            TRequester
         >,
         protected readonly translator: TTranslator,
     ) {}

@@ -10,9 +10,9 @@ import { PureParameters } from '../common/parameters';
  * - Parameterized with a requester for access control
  * - Returns a Result for reliable error handling
  *
- * @template TRequester - The type of requester/actor performing the use case
  * @template TInput - The input parameters type, must extend PureParameters<TRequester>
  * @template TOutput - The output/result type returned by the use case
+ * @template TRequester - The type of requester/actor performing the use case (optional, inferred from TInput)
  *
  * @example
  * ```typescript
@@ -21,17 +21,26 @@ import { PureParameters } from '../common/parameters';
  *   email: string;
  * }
  *
- * class CreateUserUseCase implements PureUseCase<User, CreateUserInput, User> {
- *   async execute(input: CreateUserInput): Promise<ResultAsync<User>> {
+ * class CreateUserUseCase implements PureUseCase<CreateUserInput, User> {
+ *   async execute(input: CreateUserInput): ResultAsync<User> {
+ *     // Implementation...
+ *   }
+ * }
+ *
+ * // Or with explicit requester type:
+ * class AdminUseCase implements PureUseCase<CreateUserInput, User, Admin> {
+ *   async execute(input: CreateUserInput): ResultAsync<User> {
  *     // Implementation...
  *   }
  * }
  * ```
  */
 export interface PureUseCase<
-    TRequester extends Requester,
     TInput extends PureParameters<TRequester>,
     TOutput,
+    TRequester extends Requester = TInput extends PureParameters<infer R>
+        ? R
+        : never,
 > {
     /**
      * Execute the use case with the provided input parameters.
