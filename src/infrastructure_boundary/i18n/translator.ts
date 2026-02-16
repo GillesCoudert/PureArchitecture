@@ -2,13 +2,30 @@ import { Message } from '@gilles-coudert/pure-trace';
 import { Culture } from '../../common/culture';
 
 /**
- * Interface pour la traduction de messages selon une culture spécifique.
+ * Service interface for translating messages to a specific culture.
+ *
+ * Handles localization of domain messages, errors, and traces based on user preferences.
+ * Implementations modify messages in-place by setting the `localizedMessage` property.
+ *
+ * @example
+ * ```typescript
+ * class I18nTranslator implements Translator {
+ *   translate(message: Message, culture: Culture): void {
+ *     const translations = this.getTranslationsFor(culture);
+ *     message.localizedMessage = translations[message.code] || message.message;
+ *   }
+ * }
+ * ```
  */
 export interface Translator {
     /**
-     * Traduit un message selon la culture spécifiée (mute le message en place).
-     * @param message - Le message à traduire (modifié en place avec localizedMessage)
-     * @param culture - La culture cible pour la traduction
+     * Translate a message to the specified culture.
+     *
+     * Modifies the message in-place by setting its `localizedMessage` property
+     * to the translated text appropriate for the given culture.
+     *
+     * @param message - The message to translate (modified in-place)
+     * @param culture - The target culture for translation
      */
     translate(message: Message, culture: Culture): void;
 }
