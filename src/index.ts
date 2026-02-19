@@ -12,10 +12,7 @@ export type { ValueObject } from './domain/value_object';
 // Common layer - Shared types and interfaces
 export type { Requester } from './common/requester';
 export type { Culture } from './common/culture';
-export type {
-    PureParameters,
-    TargetResourceParameters as TargetEntityParameters,
-} from './common/parameters';
+export type { PureParameters } from './common/parameters';
 export type { PageResult } from './common/page_result';
 // Application boundary layer - Use case contracts
 export type { PureUseCase } from './application_boundary/pure_use_case';

@@ -5,67 +5,49 @@ import { Requester } from './requester';
  *
  * Ensures every operation in the application has an authenticated and authorized actor
  * (requester) performing it. This is fundamental to:
- * - Access control and authorization
+ * - Access control and authorization (with capability-based access patterns)
  * - Audit trails and accountability
  * - Multi-tenancy and data isolation
  * - Security policy enforcement
  *
  * All use case inputs should extend this interface to guarantee a requester is always present.
  *
+ * The optional `payload` generic allows for flexible operation-specific data:
+ * - Resource IDs: `PureParameters<Admin, string>`
+ * - Entity data: `PureParameters<Admin, User>`
+ * - Complex data: `PureParameters<Admin, { id: string; data: User }>`
+ * - No extra data: `PureParameters<Admin>` (payload is undefined)
+ *
  * @template TRequester - The requester/actor type
+ * @template TPayload - The operation-specific payload/data (optional, defaults to not present)
  *
  * @example
  * ```typescript
- * interface CreateUserInput extends PureParameters<Admin> {
- *   name: string;
- *   email: string;
- * }
+ * // Simple: just requester
+ * const listInput: PureParameters<Admin> = {
+ *   requester: adminUser
+ * };
  *
- * // Now CreateUserInput always has a 'requester' property of type Admin
- * const input: CreateUserInput = {
+ * // With ID payload (for find, update, delete operations)
+ * const deleteInput: PureParameters<Admin, string> = {
  *   requester: adminUser,
- *   name: 'John',
- *   email: 'john@example.com'
+ *   payload: 'user-123'
+ * };
+ *
+ * // With complex payload
+ * interface CreateUserInput extends PureParameters<Admin, { name: string; email: string }> {}
+ * const createInput: CreateUserInput = {
+ *   requester: adminUser,
+ *   payload: { name: 'John', email: 'john@example.com' }
  * };
  * ```
  */
-export interface PureParameters<TRequester extends Requester> {
+export interface PureParameters<
+    TRequester extends Requester,
+    TPayload = undefined,
+> {
     /** The requester/actor performing this operation */
     requester: TRequester;
-}
-
-/**
- * Parameters for operations targeting a specific resource by its ID.
- *
- * Extends PureParameters to add a resource identifier, used for:
- * - Finding a specific entity
- * - Updating a specific entity
- * - Deleting a specific entity
- * - Any operation scoped to a single resource
- *
- * @template TRequester - The requester/actor type
- * @template TId - The resource ID type (defaults to string)
- *
- * @example
- * ```typescript
- * // Delete user by ID
- * interface DeleteUserInput extends TargetResourceParameters<Admin, string> {
- *   // Inherits: requester: Admin
- *   // Inherits: id: string
- * }
- *
- * // Update product by UUID
- * interface UpdateProductInput extends TargetResourceParameters<Manager, UUID> {
- *   // Inherits: requester: Manager
- *   // Inherits: id: UUID
- *   price: Money;
- * }
- * ```
- */
-export interface TargetResourceParameters<
-    TRequester extends Requester,
-    TId = string,
-> extends PureParameters<TRequester> {
-    /** The unique identifier of the target resource */
-    id: TId;
+    /** Optional operation-specific payload (data, ID, options, etc.) */
+    payload?: TPayload extends undefined ? undefined : TPayload;
 }

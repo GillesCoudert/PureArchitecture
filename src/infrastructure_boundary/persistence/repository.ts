@@ -1,5 +1,5 @@
 import { ResultAsync } from '@gilles-coudert/pure-trace';
-import { TargetResourceParameters } from '../../common/parameters';
+import { PureParameters } from '../../common/parameters';
 import { PageResult } from '../../common/page_result';
 import { Requester } from '../../common/requester';
 
@@ -136,7 +136,7 @@ export interface UpdateCommand<
  * }
  *
  * class PostgresUserRepository implements Repository<Admin, User, string> {
- *   async findById(query: TargetResourceParameters<Admin, string>): ResultAsync<User> {
+ *   async findById(query: PureParameters<Admin, string>): ResultAsync<User> {
  *     // Check admin permission, then query database
  *   }
  *
@@ -155,12 +155,10 @@ export interface Repository<
     /**
      * Find a single entity by its unique identifier.
      *
-     * @param query - Query parameters including requester and entity ID
+     * @param query - Query parameters including requester and entity ID in payload
      * @returns The entity if found and access is allowed
      */
-    findById(
-        query: TargetResourceParameters<TRequester, TId>,
-    ): ResultAsync<TEntity>;
+    findById(query: PureParameters<TRequester, TId>): ResultAsync<TEntity>;
 
     /**
      * Find all entities with optional pagination, filtering, sorting, and presets.
@@ -208,12 +206,10 @@ export interface Repository<
      * Performs a hard delete, completely removing the entity from storage.
      * Consider using `softDelete()` for audit trails.
      *
-     * @param command - Delete command with requester and entity ID
+     * @param command - Delete command with requester and entity ID in payload
      * @returns Void result on successful deletion
      */
-    delete(
-        command: TargetResourceParameters<TRequester, TId>,
-    ): ResultAsync<void>;
+    delete(command: PureParameters<TRequester, TId>): ResultAsync<void>;
 
     /**
      * Soft delete an entity (logical deletion).
@@ -226,12 +222,10 @@ export interface Repository<
      *
      * This method is optional; only implement if soft deletes are supported.
      *
-     * @param command - Delete command with requester and entity ID
+     * @param command - Delete command with requester and entity ID in payload
      * @returns Void result on successful soft deletion
      */
-    softDelete?(
-        command: TargetResourceParameters<TRequester, TId>,
-    ): ResultAsync<void>;
+    softDelete?(command: PureParameters<TRequester, TId>): ResultAsync<void>;
 
     /**
      * Restore a soft-deleted entity.
@@ -241,10 +235,8 @@ export interface Repository<
      *
      * This method is optional; only implement if soft deletes are supported.
      *
-     * @param command - Restore command with requester and entity ID
+     * @param command - Restore command with requester and entity ID in payload
      * @returns Void result on successful restoration
      */
-    restore?(
-        command: TargetResourceParameters<TRequester, TId>,
-    ): ResultAsync<void>;
+    restore?(command: PureParameters<TRequester, TId>): ResultAsync<void>;
 }
