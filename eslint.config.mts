@@ -1,8 +1,6 @@
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import eslint from '@eslint/js';
-// @ts-ignore
-// @ts-ignore
 import architectureConfig from './eslint-config.js';
 import importPlugin from 'eslint-plugin-import';
 

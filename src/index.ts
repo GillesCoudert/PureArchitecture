@@ -5,32 +5,18 @@
  * Ultra-minimaliste, zero opinions, framework-agnostic
  */
 
-// Domain layer - Core abstractions
-export type { Entity } from './domain/entity';
-export type { ValueObject } from './domain/value_object';
-
 // Common layer - Shared types and interfaces
 export type { Requester } from './common/requester';
-export type { Culture } from './common/culture';
-export type {
-    PureParameters,
-    TargetResourceParameters as TargetEntityParameters,
-} from './common/parameters';
-export type { PageResult } from './common/page_result';
+export type { Locale } from '@gilles-coudert/pure-trace';
+export type { Json, PureParameters } from './common/parameters';
 // Application boundary layer - Use case contracts
 export type { PureUseCase } from './application_boundary/pure_use_case';
 
 // Presentation layer - Request/Response contracts
 export type { PureRequest } from './presentation/pure_request';
-export { PureController } from './presentation/pure_controller';
+export type { PureController } from './presentation/pure_controller';
+export { createPureController } from './presentation/pure_controller';
 
 // Infrastructure boundary layer - Service contracts
 export type { Mapper } from './infrastructure_boundary/mapping/mapper';
 export type { Translator } from './infrastructure_boundary/i18n/translator';
-export type {
-    Repository,
-    CreateCommand,
-    FindAllQuery,
-    UpdateCommand,
-    EntityData,
-} from './infrastructure_boundary/persistence/repository';
