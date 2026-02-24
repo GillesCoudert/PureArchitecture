@@ -1,6 +1,6 @@
 import { ResultAsync } from '@gilles-coudert/pure-trace';
 import { Requester } from '../common/requester';
-import { PureParameters } from '../common/parameters';
+import { Json, PureParameters } from '../common/parameters';
 
 /**
  * Contract for a pure use case following Clean Architecture principles.
@@ -11,7 +11,7 @@ import { PureParameters } from '../common/parameters';
  * - Returns a Result for reliable error handling
  *
  * @template TInput - The input parameters type, must extend PureParameters<TRequester>
- * @template TOutput - The output/result type returned by the use case
+ * @template TOutput - The output/result type returned by the use case (must be JSON-serializable)
  * @template TRequester - The type of requester/actor performing the use case (optional, inferred from TInput)
  *
  * @example
@@ -36,8 +36,9 @@ import { PureParameters } from '../common/parameters';
  * ```
  */
 export interface PureUseCase<
-    TInput extends PureParameters<TRequester>,
-    TOutput,
+    TInput extends PureParameters<TRequester, TInputData>,
+    TInputData extends Json,
+    TOutput extends Json,
     TRequester extends Requester = TInput extends PureParameters<infer R>
         ? R
         : never,

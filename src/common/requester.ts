@@ -1,4 +1,4 @@
-import { Culture } from './culture';
+import { Locale } from '@gilles-coudert/pure-trace';
 
 /**
  * Represents an authenticated user, service, or actor performing operations.
@@ -17,7 +17,7 @@ import { Culture } from './culture';
  * // Basic user
  * interface User extends Requester {
  *   id: string;
- *   preferredCulture: Culture;
+ *   preferredLocale: Locale;
  *   name: string;
  *   email: string;
  * }
@@ -32,13 +32,13 @@ import { Culture } from './culture';
  * interface TenantUser extends Requester {
  *   id: string;
  *   tenantId: string;
- *   preferredCulture: Culture;
+ *   preferredLocale: Locale;
  * }
  *
  * // Service-to-service requester
  * interface ServiceAccount extends Requester {
  *   id: string;
- *   preferredCulture: Culture;
+ *   preferredLocale: Locale;
  *   serviceId: string;
  *   scopes: string[];
  * }
@@ -48,5 +48,5 @@ export interface Requester {
     /** Unique identifier for this requester/actor */
     id: string;
     /** The culture/locale preference for localized messages and i18n */
-    preferredCulture: Culture;
+    preferredLocale: Locale;
 }
